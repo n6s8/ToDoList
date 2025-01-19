@@ -1,0 +1,39 @@
+.structure{
+    padding: 32px 80px;
+    display: flex;
+    flex-direction: column;
+}
+.title{
+    display: flex;
+    flex-direction: column;
+
+    width: 630px;
+    height: 84px;
+    top: 100px;
+    left: 80px;
+    gap: 24px;
+
+    margin-bottom: 100px;
+}
+.title h1{
+    width: 630px;
+    height: 38px;
+
+    font-family: Inter, serif;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 38px;
+    text-align: left;
+    color: #151517;
+}
+.title p{
+    width: 630px;
+    height: 22px;
+
+    font-family: Inter, serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22px;
+    text-align: left;
+    color: #151517;
+}

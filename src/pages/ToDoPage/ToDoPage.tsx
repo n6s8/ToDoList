@@ -14,10 +14,9 @@ export default function ToDoPage() {
         const Tasks = localStorage.getItem('tasks');
         return Tasks ? JSON.parse(Tasks) : ["Football", "Match", "Mail"];
     });
-
     const [checkedStatus, setCheckedStates] = useState(() => {
-        const CheckedStatus = localStorage.getItem('checkedStatus');
-        return CheckedStatus ? JSON.parse(CheckedStatus) : tasks.map(() => false);
+        const checkedStatus = localStorage.getItem('checkedStatus');
+        return checkedStatus ? JSON.parse(checkedStatus) : tasks.map(() => false);
     });
 
     useEffect(() => {
@@ -43,16 +42,16 @@ export default function ToDoPage() {
     };
 
 
-    const ClickCheckbox = (index) => {
+    const clickCheckbox = (index) => {
         const StatusVerify = [...checkedStatus];
         StatusVerify[index] = !StatusVerify[index];
 
         if (StatusVerify[index]) {
 
             const doneTasks = localStorage.getItem('done');
-            const NewDoneTasks = doneTasks ? JSON.parse(doneTasks) : [];
-            NewDoneTasks.push(tasks[index]);
-            localStorage.setItem('done', JSON.stringify(NewDoneTasks));
+            const newDoneTask = doneTasks ? JSON.parse(doneTasks) : [];
+            newDoneTask.push(tasks[index]);
+            localStorage.setItem('done', JSON.stringify(newDoneTask));
 
 
             const updatedTasks = tasks.filter((_, i) => i !== index);
@@ -73,13 +72,13 @@ export default function ToDoPage() {
 
     const [isPressed, setIsPressed] = useState(false);
 
-    function ShowMe (){
+    function showMe (){
         setIsPressed(prevIsPressed => !prevIsPressed);
     }
 
     const [visibility, setVisibility] = useState(null);
 
-    const Window = (index) => {
+    const window = (index) => {
         if (visibility === index) {
             setVisibility(null);
         } else {
@@ -122,7 +121,7 @@ export default function ToDoPage() {
                             Add
                         </button>
                     </div>)}
-                    <button className={styles.plus} onClick={ShowMe}>
+                    <button className={styles.plus} onClick={showMe}>
                         <img src={Plus} className={styles.plus} alt="plus"/>
                     </button>
                 </div>
@@ -143,7 +142,7 @@ export default function ToDoPage() {
                         <div className={styles.Select}>
                             <button
                                 className={styles.Box1}
-                                onClick={() => Window(index)}
+                                onClick={() => window(index)}
                             >
                                 <img src={Points} alt="Points" className={styles.Points} />
                             </button>
@@ -152,7 +151,7 @@ export default function ToDoPage() {
                                     type="checkbox"
                                     className={styles.CheckBox}
                                     checked={checkedStatus[index]}
-                                    onChange={() => ClickCheckbox(index)}
+                                    onChange={() => clickCheckbox(index)}
                                 />
                             </div>
                         </div>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Plus from '../../assets/plus.png';
 import Points from '../../assets/Points.png';
 import { useState, useEffect } from 'react';
-import Rubbish from '../../assets/Rubbish.png';
+import Rubbish from '../../assets/rubbish.png';
 
 export default function ToDoPage() {
     const navigate = useNavigate();

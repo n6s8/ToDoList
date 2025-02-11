@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Plus from '../../assets/plus.png';
 import { useState } from "react";
 import Points from "../../assets/Points.png";
-import Rubbish from "../../assets/Rubbish.png";
+import Rubbish from "../../assets/rubbish.png";
 
 export default function DonePage() {
     const navigate = useNavigate();

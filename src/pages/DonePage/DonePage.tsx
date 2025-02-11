@@ -8,39 +8,35 @@ import Rubbish from "../../assets/Rubbish.png";
 export default function DonePage() {
     const navigate = useNavigate();
 
-    const [isPressed, setIsPressed] = useState(false);
-    const [newTask, setNewTask] = useState('');
+    const [isPressed, setIsPressed] = useState<boolean>(false);
+    const [newTask, setNewTask] = useState<string>('');
 
-    const [done, setDone] = useState(() => {
+    const [done, setDone] = useState<string[]>(() => {
         const savedTasks = localStorage.getItem('done');
         return savedTasks ? JSON.parse(savedTasks) : ["Football", "Match", "Mail"];
     });
 
-    const [visibility, setVisibility] = useState(null);
+    const [visibility, setVisibility] = useState<number | null>(null);
 
-    const Window = (index) => {
-        if (visibility === index) {
-            setVisibility(null);
-        } else {
-            setVisibility(index);
-        }
+    const Window = (index: number) => {
+        setVisibility(visibility === index ? null : index);
     };
 
     const UpdateLocalStorage = () => {
         if (newTask.trim() === "") return;
         const prevTasks = localStorage.getItem('tasks');
-        const newTasks = prevTasks ? JSON.parse(prevTasks) : [];
+        const newTasks: string[] = prevTasks ? JSON.parse(prevTasks) : [];
         newTasks.push(newTask);
         localStorage.setItem('tasks', JSON.stringify(newTasks));
         setNewTask('');
     };
 
-    const moveToTrash = (index) => {
+    const moveToTrash = (index: number) => {
         const TrashTask = done[index];
-        const newDone = done.filter((_, i) => i !== index);
+        const newDone = done.filter((_, i: number) => i !== index);
 
         const trash = localStorage.getItem('trash');
-        const newTrash = trash ? JSON.parse(trash) : [];
+        const newTrash: string[] = trash ? JSON.parse(trash) : [];
         newTrash.push(TrashTask);
         localStorage.setItem('trash', JSON.stringify(newTrash));
 
@@ -50,12 +46,12 @@ export default function DonePage() {
         setVisibility(null);
     };
 
-    const clickCheckbox = (index) => {
+    const clickCheckbox = (index: number) => {
         const task = done[index];
-        const newDone = done.filter((_, i) => i !== index);
+        const newDone = done.filter((_, i: number) => i !== index);
 
         const toDoList = localStorage.getItem('tasks');
-        const newTodo = toDoList ? JSON.parse(toDoList) : [];
+        const newTodo: string[] = toDoList ? JSON.parse(toDoList) : [];
         newTodo.push(task);
         localStorage.setItem('tasks', JSON.stringify(newTodo));
 
@@ -77,21 +73,19 @@ export default function DonePage() {
                 </nav>
 
                 <div className={styles.details}>
-                    {isPressed && (<div className={styles.adding}>
-                        <p className={styles.add}>
-                            Add New To Do
-                        </p>
-                        <input
-                            placeholder="Your text"
-                            type="text"
-                            className={styles.input}
-                            value={newTask}
-                            onChange={(e) => setNewTask(e.target.value)}
-                        />
-                        <button className={styles.BtnAdd} onClick={UpdateLocalStorage}>
-                            Add
-                        </button>
-                    </div>)}
+                    {isPressed && (
+                        <div className={styles.adding}>
+                            <p className={styles.add}>Add New To Do</p>
+                            <input
+                                placeholder="Your text"
+                                type="text"
+                                className={styles.input}
+                                value={newTask}
+                                onChange={(e) => setNewTask(e.target.value)}
+                            />
+                            <button className={styles.BtnAdd} onClick={UpdateLocalStorage}>Add</button>
+                        </div>
+                    )}
                     <button className={styles.plus} onClick={ShowMe}>
                         <img src={Plus} className={styles.plus} alt="plus"/>
                     </button>
@@ -104,16 +98,10 @@ export default function DonePage() {
                     <div className={styles.Divider}></div>
                 </div>
 
-                {done.map((task, index) => (
-                    <div
-                        key={index}
-                        className={styles.SelectRed}
-                    >
+                {done.map((task: string, index: number) => (
+                    <div key={index} className={styles.SelectRed}>
                         <div className={styles.Select}>
-                            <button
-                                className={styles.Box1}
-                                onClick={() => Window(index)}
-                            >
+                            <button className={styles.Box1} onClick={() => Window(index)}>
                                 <img src={Points} alt="Points" className={styles.Points} />
                             </button>
                             <div className={styles.Box}>
@@ -123,7 +111,6 @@ export default function DonePage() {
                                     checked={true}
                                     onChange={() => clickCheckbox(index)}
                                 />
-
                             </div>
                         </div>
 
@@ -135,10 +122,7 @@ export default function DonePage() {
                         />
 
                         {visibility === index && (
-                            <div
-                                className={styles.DropdownMenu}
-                                onClick={() => moveToTrash(index)}
-                            >
+                            <div className={styles.DropdownMenu} onClick={() => moveToTrash(index)}>
                                 <p className={styles.DropdownItem}>
                                     <img className={styles.RubbishIcon} src={Rubbish} alt="Rubbish Icon"/>
                                     <span className={styles.TextStyle}>Move to Trash</span>

@@ -5,17 +5,15 @@ import Points from '../../assets/Points.png';
 import { useState, useEffect } from 'react';
 import Rubbish from '../../assets/Rubbish.png';
 
-
 export default function ToDoPage() {
     const navigate = useNavigate();
 
-
-    const [tasks, setTasks] = useState(() => {
+    const [tasks, setTasks] = useState<string[]>(() => {
         const Tasks = localStorage.getItem('tasks');
         return Tasks ? JSON.parse(Tasks) : ["Football", "Match", "Mail"];
     });
 
-    const [checkedStatus, setCheckedStates] = useState(() => {
+    const [checkedStatus, setCheckedStates] = useState<boolean[]>(() => {
         const CheckedStatus = localStorage.getItem('checkedStatus');
         return CheckedStatus ? JSON.parse(CheckedStatus) : tasks.map(() => false);
     });
@@ -32,72 +30,59 @@ export default function ToDoPage() {
         localStorage.setItem('checkedStatus', JSON.stringify(checkedStatus));
     }, [tasks, checkedStatus]);
 
-    const [newTodo, setNewTodo] = useState('');
+    const [newTodo, setNewTodo] = useState<string>('');
 
     const addTask = () => {
         if (newTodo.trim() === "") return;
-        setTasks((prevTasks) => [...prevTasks, newTodo]);
-        setCheckedStates((prevStatus) => [...prevStatus, false]);
+        setTasks((prevTasks: string[]) => [...prevTasks, newTodo]);
+        setCheckedStates((prevStatus: boolean[]) => [...prevStatus, false]);
         setNewTodo('');
         setVisibility(null);
     };
 
-
-    const ClickCheckbox = (index) => {
+    const ClickCheckbox = (index: number) => {
         const StatusVerify = [...checkedStatus];
         StatusVerify[index] = !StatusVerify[index];
 
         if (StatusVerify[index]) {
-
             const doneTasks = localStorage.getItem('done');
-            const NewDoneTasks = doneTasks ? JSON.parse(doneTasks) : [];
+            const NewDoneTasks: string[] = doneTasks ? JSON.parse(doneTasks) : [];
             NewDoneTasks.push(tasks[index]);
             localStorage.setItem('done', JSON.stringify(NewDoneTasks));
 
-
-            const updatedTasks = tasks.filter((_, i) => i !== index);
-            const CheckedStatusAfterRemoval = StatusVerify.filter((_, i) => i !== index);
+            const updatedTasks = tasks.filter((_, i: number) => i !== index);
+            const CheckedStatusAfterRemoval = StatusVerify.filter((_, i: number) => i !== index);
 
             setTasks(updatedTasks);
             setCheckedStates(CheckedStatusAfterRemoval);
-            StatusVerify[index] = !StatusVerify[index]
-            const Status = StatusVerify;
-            setCheckedStates(Status);
         } else {
             setCheckedStates(StatusVerify);
         }
     };
 
+    const [isPressed, setIsPressed] = useState<boolean>(false);
 
-
-
-    const [isPressed, setIsPressed] = useState(false);
-
-    function ShowMe (){
+    function ShowMe() {
         setIsPressed(prevIsPressed => !prevIsPressed);
     }
 
-    const [visibility, setVisibility] = useState(null);
+    const [visibility, setVisibility] = useState<number | null>(null);
 
-    const Window = (index) => {
-        if (visibility === index) {
-            setVisibility(null);
-        } else {
-            setVisibility(index);
-        }
+    const Window = (index: number) => {
+        setVisibility(visibility === index ? null : index);
     };
 
-    const moveToTrash = (index) => {
+    const moveToTrash = (index: number) => {
         const taskToTrash = tasks[index];
-        const updatedTasks = tasks.filter((_, i) => i !== index);
+        const updatedTasks = tasks.filter((_, i: number) => i !== index);
 
         const trash = localStorage.getItem('trash');
-        const updatedTrash = trash ? JSON.parse(trash) : [];
+        const updatedTrash: string[] = trash ? JSON.parse(trash) : [];
         updatedTrash.push(taskToTrash);
         localStorage.setItem('trash', JSON.stringify(updatedTrash));
 
         setTasks(updatedTasks);
-        setCheckedStates((prevStates) => prevStates.filter((_, i) => i !== index));
+        setCheckedStates((prevStates: boolean[]) => prevStates.filter((_, i: number) => i !== index));
 
         setVisibility(null);
     };
@@ -112,21 +97,23 @@ export default function ToDoPage() {
                 </nav>
 
                 <div className={styles.details}>
-                    {isPressed && (<div className={styles.adding}>
-                        <p className={styles.add}>
-                            Add New To Do
-                        </p>
-                        <input placeholder="Your text" type="text" className={styles.input} value={newTodo}
-                               onChange={(e) => setNewTodo(e.target.value)}/>
-                        <button className={styles.BtnAdd} onClick={addTask}>
-                            Add
-                        </button>
-                    </div>)}
+                    {isPressed && (
+                        <div className={styles.adding}>
+                            <p className={styles.add}>Add New To Do</p>
+                            <input
+                                placeholder="Your text"
+                                type="text"
+                                className={styles.input}
+                                value={newTodo}
+                                onChange={(e) => setNewTodo(e.target.value)}
+                            />
+                            <button className={styles.BtnAdd} onClick={addTask}>Add</button>
+                        </div>
+                    )}
                     <button className={styles.plus} onClick={ShowMe}>
                         <img src={Plus} className={styles.plus} alt="plus"/>
                     </button>
                 </div>
-
             </div>
 
             <div className={styles.List}>
@@ -135,16 +122,10 @@ export default function ToDoPage() {
                     <div className={styles.Divider}></div>
                 </div>
 
-                {tasks.map((task, index) => (
-                    <div
-                        key={index}
-                        className={checkedStatus[index] ? styles.SelectRed : styles.main}
-                    >
+                {tasks.map((task: string, index: number) => (
+                    <div key={index} className={checkedStatus[index] ? styles.SelectRed : styles.main}>
                         <div className={styles.Select}>
-                            <button
-                                className={styles.Box1}
-                                onClick={() => Window(index)}
-                            >
+                            <button className={styles.Box1} onClick={() => Window(index)}>
                                 <img src={Points} alt="Points" className={styles.Points} />
                             </button>
                             <div className={styles.Box}>
@@ -157,28 +138,18 @@ export default function ToDoPage() {
                             </div>
                         </div>
 
-                        <input
-                            type="text"
-                            value={task}
-                            className={styles.taskInput}
-                        />
+                        <input type="text" value={task} className={styles.taskInput} readOnly />
 
                         {visibility === index && (
-                            <div
-                                className={styles.DropdownMenu}
-                                onClick={() => moveToTrash(index)}
-                            >
+                            <div className={styles.DropdownMenu} onClick={() => moveToTrash(index)}>
                                 <p className={styles.DropdownItem}>
                                     <img className={styles.RubbishIcon} src={Rubbish} alt="Rubbish Icon"/>
                                     <span className={styles.TextStyle}>Move to Trash</span>
                                 </p>
                             </div>
-
                         )}
-
                     </div>
                 ))}
-
             </div>
         </div>
     );

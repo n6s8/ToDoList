@@ -8,18 +8,18 @@ import ToDoIcon from "../../assets/ToDo.png";
 
 export default function TrashPage() {
     const navigate = useNavigate();
-    const [isPressed, setIsPressed] = useState(false);
-    const [newTask, setNewTask] = useState('');
+    const [isPressed, setIsPressed] = useState<boolean>(false);
+    const [newTask, setNewTask] = useState<string>('');
 
-    const [trashs, setTrash] = useState(() => {
+    const [trashs, setTrash] = useState<string[]>(() => {
         const savedTasks = localStorage.getItem('trash');
-        return savedTasks ? JSON.parse(savedTasks) : ["Mu", "Chealse", "Man City"];
+        return savedTasks ? JSON.parse(savedTasks) : ["Mu", "Chelsea", "Man City"];
     });
 
     const UpdateLocalStorage = () => {
         if (newTask.trim() === "") return;
         const oldTasks = localStorage.getItem('tasks');
-        const newTasks = oldTasks ? JSON.parse(oldTasks) : [];
+        const newTasks: string[] = oldTasks ? JSON.parse(oldTasks) : [];
         newTasks.push(newTask);
         localStorage.setItem('tasks', JSON.stringify(newTasks));
         setNewTask('');
@@ -29,36 +29,30 @@ export default function TrashPage() {
         setIsPressed(prevIsPressed => !prevIsPressed);
     }
 
-    const [visibility, setVisibility] = useState(null);
+    const [visibility, setVisibility] = useState<number | null>(null);
 
-    const Window = (index) => {
-        if (visibility === index) {
-            setVisibility(null);
-        } else {
-            setVisibility(index);
-        }
+    const Window = (index: number) => {
+        setVisibility(prev => (prev === index ? null : index));
     };
 
-    const deleteForever = (index) => {
-        const newTrash = trashs.filter((_, i) => i !== index);
+    const deleteForever = (index: number) => {
+        const newTrash = trashs.filter((_, i: number) => i !== index);
         setTrash(newTrash);
         localStorage.setItem('trash', JSON.stringify(newTrash));
-
         setVisibility(null);
     };
 
-    const moveBackToTodo = (index) => {
+    const moveBackToTodo = (index: number) => {
         const addingTask = trashs[index];
-        const newTrash = trashs.filter((_, i) => i !== index);
+        const newTrash = trashs.filter((_, i: number) => i !== index);
 
         const oldTasks = localStorage.getItem('tasks');
-        const newTasks = oldTasks ? JSON.parse(oldTasks) : [];
+        const newTasks: string[] = oldTasks ? JSON.parse(oldTasks) : [];
         newTasks.push(addingTask);
         localStorage.setItem('tasks', JSON.stringify(newTasks));
 
         setTrash(newTrash);
         localStorage.setItem('trash', JSON.stringify(newTrash));
-
         setVisibility(null);
     };
 
@@ -82,9 +76,7 @@ export default function TrashPage() {
                                 value={newTask}
                                 onChange={(e) => setNewTask(e.target.value)}
                             />
-                            <button className={styles.BtnAdd} onClick={UpdateLocalStorage}>
-                                Add
-                            </button>
+                            <button className={styles.BtnAdd} onClick={UpdateLocalStorage}>Add</button>
                         </div>
                     )}
                     <button className={styles.plus} onClick={ShowMe}>
@@ -99,42 +91,30 @@ export default function TrashPage() {
                     <div className={styles.Divider}></div>
                 </div>
 
-                {trashs.map((task, index) => (
-                    <div
-                        key={index}
-                        className={styles.main}
-                    >
+                {trashs.map((task: string, index: number) => (
+                    <div key={index} className={styles.main}>
                         <div className={styles.Select}>
-                            <button
-                                className={styles.Box1}
-                                onClick={() => Window(index)}
-                            >
+                            <button className={styles.Box1} onClick={() => Window(index)}>
                                 <img src={Points} alt="Points" className={styles.Points} />
                             </button>
                             {visibility === index && (
                                 <div className={styles.DropdownMenu}>
-                                         <p className={styles.WindowBlock} onClick={() => deleteForever(index)}>
-                                            <img src={RubbishIcon} alt="Rubbish Icon" className={styles.RubbishIcon}/>
-                                            <span className={styles.TextStyle}>Delete Forever</span>
-                                        </p>
+                                    <p className={styles.WindowBlock} onClick={() => deleteForever(index)}>
+                                        <img src={RubbishIcon} alt="Rubbish Icon" className={styles.RubbishIcon}/>
+                                        <span className={styles.TextStyle}>Delete Forever</span>
+                                    </p>
 
-                                        <p className={styles.WindowBlock} onClick={() => moveBackToTodo(index)}>
-                                            <img src={ToDoIcon} alt="ToDo Icon" className={styles.ToDoIcon}/>
-                                            <span className={styles.TextStyle}>Move Back To To Do</span>
-                                        </p>
-
+                                    <p className={styles.WindowBlock} onClick={() => moveBackToTodo(index)}>
+                                        <img src={ToDoIcon} alt="ToDo Icon" className={styles.ToDoIcon}/>
+                                        <span className={styles.TextStyle}>Move Back To To Do</span>
+                                    </p>
                                 </div>
                             )}
                         </div>
 
-                        <input
-                            type="text"
-                            value={task}
-                            className={styles.taskInput}
-                        />
+                        <input type="text" value={task} className={styles.taskInput} readOnly />
                     </div>
                 ))}
-
             </div>
         </div>
     );
